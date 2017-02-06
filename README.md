@@ -1,5 +1,5 @@
 ```
-remote v0.0.0
+remote v1.0.0
 Casey Rodarmor <casey@rodarmor.com>
 Generate remote repo URLs - https://github.com/casey/remote
 
