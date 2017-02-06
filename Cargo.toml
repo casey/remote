@@ -1,6 +1,6 @@
 [package]
 name        = "remote"
-version     = "0.0.0"
+version     = "1.0.0"
 description = "Generate remote repo URLs"
 authors     = ["Casey Rodarmor <casey@rodarmor.com>"]
 license     = "WTFPL OR MIT OR Apache-2.0"
