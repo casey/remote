@@ -1,11 +1,45 @@
-# todo
+```
+remote v0.0.0
+Casey Rodarmor <casey@rodarmor.com>
+Generate remote repo URLs - https://github.com/casey/remote
 
-- add cargo.toml description, license, repository
-- any other cargo.toml fields?
-- add example aliases
-- pick a description emoji
-- publish to cargo
-- give examples in help string
-- describe arguments
-- is it stupid to write an app to do this? yes, probably
-- put it in menagerie with just, colorize, and nomi
+USAGE:
+    remote <service> <user> <project>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <service>     [values: bitbucket-hg, bitbucket-https, bitbucket-ssh, github-https, github-ssh, gitlab-https,
+                 gitlab-ssh]
+    <user>       
+    <project>    
+
+DESCRIPTION:
+
+    A little program that prints repository URLs.
+
+    On its own it does not save a great deal of typing, but you can create
+    aliases in your shell's configuration file like so:
+
+    alias github=`remote github-ssh gazebo`
+    alias bitbucket=`remote bitbucket-ssh gazebo`
+
+    Assuming you have the username `gazebo` on both github and bitbucket, you
+    can then clone your own repositories easily:
+
+    $ git clone `github foo`
+    Cloning into 'foo'...
+    ...
+
+    Or add new remotes to existing repos:
+
+    $ git remote add `github foo`
+
+    And of course you can always use remote directly:
+
+    $ git clone `remote github-ssh rust-lang cargo`
+    Cloning into 'cargo'...
+    ...
+```

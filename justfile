@@ -8,3 +8,8 @@ run:
 
 test:
 	cargo test
+
+readme:
+	echo '```' > README.md
+	cargo run -- --help >> README.md
+	echo '```' >> README.md

@@ -77,27 +77,55 @@ impl Template {
   }
 } 
 
+static SERVICES: &'static [Service] = &[
+  BitbucketHG,
+  BitbucketHTTPS,
+  BitbucketSSH,
+  GitHubHTTPS,
+  GitHubSSH,
+  GitLabHTTPS,
+  GitLabSSH,
+];
+
+static AFTER_HELP: STR = "DESCRIPTION:
+
+    A little program that prints repository URLs.
+
+    On its own it does not save a great deal of typing, but you can create
+    aliases in your shell's configuration file like so:
+
+    alias github=`remote github-ssh gazebo`
+    alias bitbucket=`remote bitbucket-ssh gazebo`
+
+    Assuming you have the username `gazebo` on both github and bitbucket, you
+    can then clone your own repositories easily:
+
+    $ git clone `github foo`
+    Cloning into 'foo'...
+    ...
+
+    Or add new remotes to existing repos:
+
+    $ git remote add `github foo`
+
+    And of course you can always use remote directly:
+
+    $ git clone `remote github-ssh rust-lang cargo`
+    Cloning into 'cargo'...
+    ...";
+
 fn run<I, T>(args: I) -> String
   where I: IntoIterator<Item = T>,
         T: Into<std::ffi::OsString> + Clone,
 {
-  let services = &[
-    BitbucketHG,
-    BitbucketHTTPS,
-    BitbucketSSH,
-    GitHubHTTPS,
-    GitHubSSH,
-    GitLabHTTPS,
-    GitLabSSH,
-  ];
-
-  let service_names = services.iter().map(|service| service.name()).collect::<Vec<_>>();
+  let service_names = SERVICES.iter().map(|service| service.name()).collect::<Vec<_>>();
 
   let matches = App::new("remote")
     .version(concat!("v", env!("CARGO_PKG_VERSION")))
     .author("Casey Rodarmor <casey@rodarmor.com>")
     .about("Generate remote repo URLs - https://github.com/casey/remote")
     .setting(AppSettings::ColoredHelp)
+    .after_help(AFTER_HELP)
     .arg(Arg::with_name("service")
          .possible_values(&service_names)
          .required(true))
