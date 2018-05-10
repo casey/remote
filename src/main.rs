@@ -83,7 +83,7 @@ impl Template {
   fn instantiate(self, user: &str, project: &str) -> String {
     [self.prefix, user, self.infix, project, self.postfix].join("")
   }
-} 
+}
 
 static SERVICES: &'static [Service] = &[
   BitbucketHG,
@@ -159,11 +159,13 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
+  use super::*;
+
   macro_rules! test {
-    ($name:ident, $service:expr, $user:expr, $project:expr, $expected:expr) => {
+    (name: $name:ident, service: $service:expr, user: $user:expr, project: $project:expr, expected: $expected:expr,) => {
       #[test]
       fn $name() {
-        let result = super::run(&["remote", $service, $user, $project]);
+        let result = run(&["remote", $service, $user, $project]);
         if result != $expected {
           panic!("{} != {}", result, $expected);
         }
@@ -172,10 +174,74 @@ mod tests {
   }
 
   test! {
-    github_ssh, "github-ssh", "casey", "remote", "git@github.com:casey/remote.git"
+    name:     bitbucket_hg,
+    service:  "bitbucket-hg",
+    user:     "casey",
+    project:  "remote",
+    expected: "ssh://hg@bitbucket.org/casey/remote",
   }
 
   test! {
-    bitbucket_https, "bitbucket-https", "casey", "remote", "https://bitbucket.org/casey/remote.git"
+    name:     bitbucket_https,
+    service:  "bitbucket-https",
+    user:     "casey",
+    project:  "remote",
+    expected: "https://bitbucket.org/casey/remote.git",
+  }
+
+  test! {
+    name:     bitbucket_ssh,
+    service:  "bitbucket-ssh",
+    user:     "rodarmor",
+    project:  "server",
+    expected: "git@bitbucket.org:rodarmor/server.git",
+  }
+
+  test! {
+    name:     github_https,
+    service:  "github-https",
+    user:     "casey",
+    project:  "just",
+    expected: "https://github.com/casey/just.git",
+  }
+
+  test! {
+    name:     github_ssh,
+    service:  "github-ssh",
+    user:     "casey",
+    project:  "remote",
+    expected: "git@github.com:casey/remote.git",
+  }
+
+  test! {
+    name:     gitlab_https,
+    service:  "gitlab-https",
+    user:     "whim",
+    project:  "menagerie",
+    expected: "https://gitlab.com/whim/menagerie.git",
+  }
+
+  test! {
+    name:     gitlab_ssh,
+    service:  "gitlab-ssh",
+    user:     "whim",
+    project:  "menagerie",
+    expected: "git@gitlab.com:whim/menagerie.git",
+  }
+
+  test! {
+    name:     pikacode_https,
+    service:  "pikacode-https",
+    user:     "Stinky",
+    project:  "Orgfiler",
+    expected: "https://v2.pikacode.com/Stinky/Orgfiler.git",
+  }
+
+  test! {
+    name:     pikacode_ssh,
+    service:  "pikacode-ssh",
+    user:     "pararaum",
+    project:  "cbmbasicVariableDumper",
+    expected: "git@v2.pikacode.com:pararaum/cbmbasicVariableDumper.git",
   }
 }
