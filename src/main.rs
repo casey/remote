@@ -13,6 +13,8 @@ enum Service {
   GitHubSSH,
   GitLabHTTPS,
   GitLabSSH,
+  PikacodeHTTPS,
+  PikacodeSSH,
 }
 
 use Service::*;
@@ -27,6 +29,8 @@ impl Service {
       GitHubSSH      => "github-ssh",
       GitLabHTTPS    => "gitlab-https",
       GitLabSSH      => "gitlab-ssh",
+      PikacodeHTTPS  => "pikacode-https",
+      PikacodeSSH    => "pikacode-ssh",
     }
   }
 
@@ -39,19 +43,23 @@ impl Service {
       "github-ssh"      => Some(GitHubSSH),
       "gitlab-https"    => Some(GitLabHTTPS),
       "gitlab-ssh"      => Some(GitLabSSH),
+      "pikacode-https"  => Some(PikacodeHTTPS),
+      "pikacode-ssh"    => Some(PikacodeSSH),
       _                 => None,
     }
   }
 
   fn template(self) -> Template {
     match self {
-      BitbucketHG    => Template::new("ssh://hg@bitbucket.org/", "/", ""),
-      BitbucketHTTPS => Template::new("https://bitbucket.org/",  "/", ".git"),
-      BitbucketSSH   => Template::new("git@bitbucket.org:",      "/", ".git"),
-      GitHubHTTPS    => Template::new("https://github.com/",     "/", ".git"),
-      GitHubSSH      => Template::new("git@github.com:",         "/", ".git"),
-      GitLabHTTPS    => Template::new("https://gitlab.com/",     "/", ".git"),
-      GitLabSSH      => Template::new("git@gitlab.com:",         "/", ".git"),
+      BitbucketHG    => Template::new("ssh://hg@bitbucket.org/",  "/", ""),
+      BitbucketHTTPS => Template::new("https://bitbucket.org/",   "/", ".git"),
+      BitbucketSSH   => Template::new("git@bitbucket.org:",       "/", ".git"),
+      GitHubHTTPS    => Template::new("https://github.com/",      "/", ".git"),
+      GitHubSSH      => Template::new("git@github.com:",          "/", ".git"),
+      GitLabHTTPS    => Template::new("https://gitlab.com/",      "/", ".git"),
+      GitLabSSH      => Template::new("git@gitlab.com:",          "/", ".git"),
+      PikacodeHTTPS  => Template::new("https://v2.pikacode.com/", "/", ".git"),
+      PikacodeSSH    => Template::new("git@v2.pikacode.com:",     "/", ".git"),
     }
   }
 }
@@ -85,6 +93,8 @@ static SERVICES: &'static [Service] = &[
   GitHubSSH,
   GitLabHTTPS,
   GitLabSSH,
+  PikacodeHTTPS,
+  PikacodeSSH,
 ];
 
 static AFTER_HELP: STR = "DESCRIPTION:
@@ -148,4 +158,24 @@ fn main() {
 }
 
 #[cfg(test)]
-mod tests;
+mod tests {
+  macro_rules! test {
+    ($name:ident, $service:expr, $user:expr, $project:expr, $expected:expr) => {
+      #[test]
+      fn $name() {
+        let result = super::run(&["remote", $service, $user, $project]);
+        if result != $expected {
+          panic!("{} != {}", result, $expected);
+        }
+      }
+    };
+  }
+
+  test! {
+    github_ssh, "github-ssh", "casey", "remote", "git@github.com:casey/remote.git"
+  }
+
+  test! {
+    bitbucket_https, "bitbucket-https", "casey", "remote", "https://bitbucket.org/casey/remote.git"
+  }
+}

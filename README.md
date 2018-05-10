@@ -11,8 +11,8 @@ FLAGS:
     -V, --version    Prints version information
 
 ARGS:
-    <service>     [values: bitbucket-hg, bitbucket-https, bitbucket-ssh, github-https, github-ssh, gitlab-https,
-                 gitlab-ssh]
+    <service>     [possible values: bitbucket-hg, bitbucket-https, bitbucket-ssh, github-https, github-ssh, gitlab
+                 -https, gitlab-ssh, pikacode-https, pikacode-ssh]
     <user>       
     <project>    
 
